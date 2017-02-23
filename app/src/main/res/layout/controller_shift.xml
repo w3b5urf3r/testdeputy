@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tool="http://schemas.android.com/tools">
+
+    <data>
+
+        <variable
+            name="currentShiftInfo"
+            type="com.deputy.test.mariolopez.beans.ShiftInfo" />
+    </data>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:gravity="center_horizontal"
+        android:orientation="vertical">
+
+
+        <TextView
+            android:id="@+id/shift_time"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@{currentShiftInfo.time.toString()}" />
+
+        <!--<ImageView-->
+        <!--android:layout_width="wrap_content"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:scaleType="centerCrop"-->
+        <!--app:imageUrl="@{currentShiftInfo.imageUrl}" />-->
+
+        <Button
+            android:id="@+id/shift_button"
+            android:layout_width="match_parent"
+            android:layout_height="45dp"
+            android:tag="@{currentShiftInfo.isStarted}"
+            app:shiftButtonTriggerText="@{currentShiftInfo.isStarted}"
+            tool:text="button text" />
+
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/shift_list"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
+    </LinearLayout>
+
+</layout>

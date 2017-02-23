@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <data>
+
+        <import type="com.deputy.test.mariolopez.beans.Shift" />
+
+        <variable
+            name="shift"
+            type="com.deputy.test.mariolopez.beans.Shift" />
+    </data>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <ImageView
+            android:id="@+id/shift_image"
+            android:layout_width="60dp"
+            android:layout_height="60dp"
+            android:background="@color/colorAccent"
+            android:scaleType="centerCrop"
+            app:imageUrl="@{shift.imageUrl}" />
+
+        <TextView
+            android:id="@+id/shift_start"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_toEndOf="@id/shift_image"
+            android:layout_toRightOf="@id/shift_image"
+            android:text="@{shift.start.toString()}" />
+
+        <TextView
+            android:id="@+id/shift_end"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/shift_start"
+            android:layout_toEndOf="@id/shift_image"
+            android:layout_toRightOf="@id/shift_image"
+            android:text="@{shift.end.toString()}" />
+
+        <TextView
+            android:id="@+id/shift_longitude"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/shift_end"
+            android:layout_toEndOf="@id/shift_image"
+            android:layout_toRightOf="@id/shift_image"
+            android:text="@{Shift.getFormattedLatitude(shift)}" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/shift_end"
+            android:layout_toEndOf="@id/shift_image"
+            android:layout_toRightOf="@id/shift_image"
+            android:text="@{Shift.getFormattedLongitude(shift)}" />
+
+    </RelativeLayout>
+
+</layout>
