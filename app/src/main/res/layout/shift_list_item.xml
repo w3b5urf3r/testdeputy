@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto">
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tool="http://schemas.android.com/tools">
 
     <data>
 
@@ -13,12 +14,12 @@
 
     <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="wrap_content">
 
         <ImageView
             android:id="@+id/shift_image"
-            android:layout_width="60dp"
-            android:layout_height="60dp"
+            android:layout_width="80dp"
+            android:layout_height="80dp"
             android:background="@color/colorAccent"
             android:scaleType="centerCrop"
             app:imageUrl="@{shift.imageUrl}" />
@@ -47,14 +48,16 @@
             android:layout_below="@id/shift_end"
             android:layout_toEndOf="@id/shift_image"
             android:layout_toRightOf="@id/shift_image"
+            tool:text="latide formattte 03.3213123213"
             android:text="@{Shift.getFormattedLatitude(shift)}" />
 
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_below="@id/shift_end"
+            android:layout_below="@id/shift_longitude"
             android:layout_toEndOf="@id/shift_image"
             android:layout_toRightOf="@id/shift_image"
+            tool:text="longitude formattted 09.993123213"
             android:text="@{Shift.getFormattedLongitude(shift)}" />
 
     </RelativeLayout>

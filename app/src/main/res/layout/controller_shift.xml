@@ -4,7 +4,7 @@
     xmlns:tool="http://schemas.android.com/tools">
 
     <data>
-
+        <import type="com.deputy.test.mariolopez.beans.ShiftInfo"/>
         <variable
             name="currentShiftInfo"
             type="com.deputy.test.mariolopez.beans.ShiftInfo" />
@@ -16,18 +16,11 @@
         android:gravity="center_horizontal"
         android:orientation="vertical">
 
-
         <TextView
             android:id="@+id/shift_time"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="@{currentShiftInfo.time.toString()}" />
-
-        <!--<ImageView-->
-        <!--android:layout_width="wrap_content"-->
-        <!--android:layout_height="wrap_content"-->
-        <!--android:scaleType="centerCrop"-->
-        <!--app:imageUrl="@{currentShiftInfo.imageUrl}" />-->
+            android:text="@{ShiftInfo.formatTime(currentShiftInfo.started,currentShiftInfo.time)}" />
 
         <Button
             android:id="@+id/shift_button"
@@ -38,7 +31,7 @@
             tool:text="button text" />
 
         <android.support.v7.widget.RecyclerView
-            android:id="@+id/shift_list"
+            android:id="@+id/shifts_list"
             android:layout_width="match_parent"
             android:layout_height="match_parent" />
     </LinearLayout>

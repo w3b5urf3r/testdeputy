@@ -9,6 +9,8 @@ import android.location.Location;
 import android.location.LocationManager;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -20,7 +22,9 @@ import com.deputy.test.mariolopez.beans.Shift;
 import com.deputy.test.mariolopez.beans.ShiftInfo;
 import com.deputy.test.mariolopez.databinding.ControllerShiftBinding;
 import com.deputy.test.mariolopez.presenter.BasePresenter;
+import com.deputy.test.mariolopez.presenter.ShiftAdapter;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -50,6 +54,7 @@ public class ShiftController extends Controller implements ShiftView {
     private ShiftPresenter presenter = new ShiftPresenter(restApi);
     private ShiftInfo currentShift;
     private ControllerShiftBinding controllerShiftBinding;
+    private ShiftAdapter shiftAdapter;
 
     @NonNull
     @Override
@@ -62,13 +67,22 @@ public class ShiftController extends Controller implements ShiftView {
         super.onAttach(view);
         presenter.bindView(this);
         controllerShiftBinding = DataBindingUtil.bind(view);
-        //todo fetch data from db
+        //todo fetch data from db in the presenter
         currentShift = new ShiftInfo(new Date(), Double.valueOf("41.8919300"), Double.valueOf("12.5113300"));
         controllerShiftBinding.setCurrentShiftInfo(currentShift);
-        bindView(view);
+        initView(view);
     }
 
-    private void bindView(@NonNull View view) {
+    private void initView(@NonNull View view) {
+        RecyclerView recyclerView = findById(view, R.id.shifts_list);
+        recyclerView.setHasFixedSize(true);
+        recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
+
+        shiftAdapter = new ShiftAdapter(R.layout.shift_list_item);
+        shiftAdapter.setDataSet(new ArrayList<>()); //todo load list from db.
+        recyclerView.setAdapter(shiftAdapter);
+        presenter.showShifts();
+
         //we could use the data binding method as well for the on click listener
         findById(view, R.id.shift_button).setOnClickListener(v -> {
             if (!currentShift.isStarted()) {
@@ -79,7 +93,6 @@ public class ShiftController extends Controller implements ShiftView {
                 presenter.startShift(currentShift);
             } else {
                 presenter.endShift(currentShift);
-                presenter.showShifts();
             }
         });
     }
@@ -106,6 +119,7 @@ public class ShiftController extends Controller implements ShiftView {
                     ActivityCompat.checkSelfPermission(context,
                             Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_DENIED) {
 //                I avoid all the code for requesting and checking permission  as it's always the same stuff,
+//                I believe it's out of scope for this test
 //                     note for automated test this gets a little bit tricky
 //                        as you have to build a script that grant the permission before installing the app in each flavour.
 
@@ -132,8 +146,11 @@ public class ShiftController extends Controller implements ShiftView {
 
     @Override
     public void refreshShifts(List<Shift> shifts) {
-        if (controllerShiftBinding != null) {
-            controllerShiftBinding.notifyPropertyChanged(BR.shift);
+        if (!isActivityFinishing(getActivity())) {
+            getActivity().runOnUiThread(() -> {
+                shiftAdapter.setDataSet(shifts);
+                shiftAdapter.notifyDataSetChanged();
+            });
         }
     }
 
@@ -155,6 +172,7 @@ public class ShiftController extends Controller implements ShiftView {
             refreshShiftInfo(getLastKnownLocation(activity, getLocationManager()));
             notifyShiftInfoBinding();
         }
+        presenter.showShifts();
 
     }
 
@@ -195,7 +213,7 @@ class ShiftPresenter extends BasePresenter<ShiftView> {
                 .subscribe(
                         shifts -> {
                             ShiftView view = view();
-                            if (view != null)
+                            if (view != null && shifts != null)
                                 view.refreshShifts(shifts);
                         },
                         error -> {
@@ -231,22 +249,25 @@ class ShiftPresenter extends BasePresenter<ShiftView> {
     public void endShift(ShiftInfo currentShift) {
         restApi.endShift(currentShift)
 //                .observeOn(Schedulers.io())
-//                .observeOn(AndroidSchedulers.mainThread())
                 .subscribeOn(Schedulers.io())
-                .doOnCompleted(() ->
-                {
-                    ShiftView view = view();
-                    if (view != null) {
-                        view.endShift();
-                    }
-                })
+//                .observeOn(AndroidSchedulers.mainThread())
+
+                .doOnCompleted
+                        (() ->
+                        {
+                            ShiftView view = view();
+                            if (view != null) {
+                                view.endShift();
+                            }
+                        })
                 .doOnError(
                         error -> {
                             ShiftView view = view();
                             if (view != null)
                                 view.showErrorUi(error);
                         }
-                ).subscribe();
+                )
+                .subscribe();
     }
 
 }

@@ -57,4 +57,11 @@ public class ShiftInfo {
     public void setTime(Date time) {
         this.time = time;
     }
+
+    public static String formatTime(boolean isStarted, Date time) {
+        if (isStarted) {
+            return "started at : " + time.toString();
+        }
+        return "ended at : " + time.toString();
+    }
 }
