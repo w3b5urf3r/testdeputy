@@ -34,29 +34,11 @@ public class ShiftInfo {
         this.started = started;
     }
 
-    public String getLatitude() {
-        return latitude;
-    }
-
-    public void setLatitude(String latitude) {
-        this.latitude = latitude;
-    }
-
-    public String getLongitude() {
-        return longitude;
-    }
-
-    public void setLongitude(String longitude) {
-        this.longitude = longitude;
-    }
 
     public Date getTime() {
         return time;
     }
 
-    public void setTime(Date time) {
-        this.time = time;
-    }
 
     public static String formatTime(boolean isStarted, Date time) {
         if (isStarted) {

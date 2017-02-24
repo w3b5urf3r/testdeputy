@@ -1,8 +1,9 @@
-package com.deputy.test.mariolopez.presenter;
+package com.deputy.test.mariolopez.ui.controllers.adapter;
 
 import android.databinding.DataBindingUtil;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
+import android.view.View;
 import android.view.ViewGroup;
 
 import com.deputy.test.mariolopez.BR;
@@ -17,10 +18,15 @@ import java.util.List;
 
 public class ShiftAdapter extends RecyclerView.Adapter<ShiftAdapter.ViewHolder> {
     private final int layoutId;
+    private final View.OnClickListener clickListener;
     private List<Shift> dataSet;
 
     public void setDataSet(List<Shift> dataSet) {
         this.dataSet = dataSet;
+    }
+
+    public List<Shift> getDataSet() {
+        return dataSet;
     }
 
     public static class ViewHolder extends RecyclerView.ViewHolder {
@@ -32,14 +38,17 @@ public class ShiftAdapter extends RecyclerView.Adapter<ShiftAdapter.ViewHolder> 
             this.binding = binding;
         }
 
-        public void bind(Shift shift) {
+        public void bind(Shift shift, View.OnClickListener clickListener) {
             binding.setVariable(BR.shift, shift);
             binding.executePendingBindings();
+            binding.getRoot().setTag(shift);
+            binding.getRoot().setOnClickListener(clickListener);
         }
     }
 
-    public ShiftAdapter(int layoutID) {
+    public ShiftAdapter(int layoutID, View.OnClickListener onItemClickListener) {
         this.layoutId=layoutID;
+        this.clickListener=onItemClickListener;
     }
 
     @Override
@@ -52,7 +61,7 @@ public class ShiftAdapter extends RecyclerView.Adapter<ShiftAdapter.ViewHolder> 
 
     @Override
     public void onBindViewHolder(ViewHolder holder, int position) {
-        holder.bind(dataSet.get(position));
+        holder.bind(dataSet.get(position),clickListener);
 
     }
 

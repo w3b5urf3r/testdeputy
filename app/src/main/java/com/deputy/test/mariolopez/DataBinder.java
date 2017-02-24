@@ -14,7 +14,6 @@ import com.bumptech.glide.Glide;
 public final class DataBinder {
 
     private DataBinder() {
-        //NO-OP
     }
 
     @BindingAdapter("imageUrl")

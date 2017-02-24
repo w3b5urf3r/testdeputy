@@ -19,7 +19,7 @@ import retrofit2.converter.gson.GsonConverterFactory;
 
 /**
  * This class returns to you the interface for the rest api
- * it's done in a ways it can be used through dagger for Dependency Injection
+ * it's done in a way it can be used through dagger for Dependency Injection
  * and allows us to not stick to any tech in particularly (retrofit)
  */
 public class ApiModule {

@@ -1,4 +1,4 @@
-package com.deputy.test.mariolopez.presenter;
+package com.deputy.test.mariolopez.ui.controllers;
 
 import android.support.annotation.CallSuper;
 import android.support.annotation.NonNull;

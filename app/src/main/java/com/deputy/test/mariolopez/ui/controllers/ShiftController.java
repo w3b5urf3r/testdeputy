@@ -1,4 +1,4 @@
-package com.deputy.test.mariolopez;
+package com.deputy.test.mariolopez.ui.controllers;
 
 import android.Manifest;
 import android.app.Activity;
@@ -16,13 +16,15 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.bluelinelabs.conductor.Controller;
+import com.deputy.test.mariolopez.BR;
+import com.deputy.test.mariolopez.MainActivity;
+import com.deputy.test.mariolopez.R;
 import com.deputy.test.mariolopez.api.ApiModule;
 import com.deputy.test.mariolopez.api.DeputyRestApi;
 import com.deputy.test.mariolopez.beans.Shift;
 import com.deputy.test.mariolopez.beans.ShiftInfo;
 import com.deputy.test.mariolopez.databinding.ControllerShiftBinding;
-import com.deputy.test.mariolopez.presenter.BasePresenter;
-import com.deputy.test.mariolopez.presenter.ShiftAdapter;
+import com.deputy.test.mariolopez.ui.controllers.adapter.ShiftAdapter;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -77,22 +79,33 @@ public class ShiftController extends Controller implements ShiftView {
         RecyclerView recyclerView = findById(view, R.id.shifts_list);
         recyclerView.setHasFixedSize(true);
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
+        shiftAdapter = new ShiftAdapter(R.layout.shift_list_item, v -> {
+            Activity activity = getActivity();
+            if(!isActivityFinishing(activity)) {
+                ((MainActivity) activity).showShiftDetail((Shift) v.getTag());
 
-        shiftAdapter = new ShiftAdapter(R.layout.shift_list_item);
+            }});
+
         shiftAdapter.setDataSet(new ArrayList<>()); //todo load list from db.
         recyclerView.setAdapter(shiftAdapter);
         presenter.showShifts();
 
+
         //we could use the data binding method as well for the on click listener
         findById(view, R.id.shift_button).setOnClickListener(v -> {
-            if (!currentShift.isStarted()) {
-                LocationManager locationManager = getLocationManager();
-                //it's save to call get activity here with no check
-                Location lastKnownLocation = getLastKnownLocation(getActivity(), locationManager);
-                refreshShiftInfo(lastKnownLocation);
-                presenter.startShift(currentShift);
-            } else {
-                presenter.endShift(currentShift);
+            Activity activity = getActivity();
+            if (!isActivityFinishing(activity)) {
+
+                if (!currentShift.isStarted()) {
+                    LocationManager locationManager = getLocationManager();
+                    //it's save to call get activity here with no check
+                    Location lastKnownLocation = getLastKnownLocation(activity, locationManager);
+                    refreshShiftInfo(lastKnownLocation);
+                    presenter.startShift(currentShift);
+                } else {
+                    refreshShiftInfo(getLastKnownLocation(activity, getLocationManager()));
+                    presenter.endShift(currentShift);
+                }
             }
         });
     }
@@ -169,7 +182,6 @@ public class ShiftController extends Controller implements ShiftView {
     public void endShift() {
         Activity activity = getActivity();
         if (!isActivityFinishing(activity)) {
-            refreshShiftInfo(getLastKnownLocation(activity, getLocationManager()));
             notifyShiftInfoBinding();
         }
         presenter.showShifts();
@@ -269,5 +281,4 @@ class ShiftPresenter extends BasePresenter<ShiftView> {
                 )
                 .subscribe();
     }
-
 }

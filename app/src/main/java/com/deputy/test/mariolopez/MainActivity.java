@@ -6,6 +6,10 @@ import android.support.v7.app.AppCompatActivity;
 import com.bluelinelabs.conductor.Conductor;
 import com.bluelinelabs.conductor.Router;
 import com.bluelinelabs.conductor.RouterTransaction;
+import com.bluelinelabs.conductor.changehandler.FadeChangeHandler;
+import com.deputy.test.mariolopez.beans.Shift;
+import com.deputy.test.mariolopez.ui.controllers.ShiftController;
+import com.deputy.test.mariolopez.ui.controllers.ShiftDetailController;
 
 import static butterknife.ButterKnife.bind;
 import static butterknife.ButterKnife.findById;
@@ -24,9 +28,6 @@ public class MainActivity extends AppCompatActivity {
         if (!router.hasRootController()) {
             router.setRoot(RouterTransaction.with(new ShiftController()));
         }
-        //todo through DI
-
-
     }
 
     @Override
@@ -34,5 +35,14 @@ public class MainActivity extends AppCompatActivity {
         if (!router.handleBack()) {
             super.onBackPressed();
         }
+    }
+
+    public void showShiftDetail(Shift shift) {
+        Bundle bundle = new Bundle();
+        bundle.putParcelable(ShiftDetailController.BUNDLE_SHIFT_KEY,shift);
+
+        router.pushController(RouterTransaction.with(new ShiftDetailController(bundle))
+                .pushChangeHandler(FadeChangeHandler.fromBundle(null))
+                .popChangeHandler(FadeChangeHandler.fromBundle(null)));
     }
 }

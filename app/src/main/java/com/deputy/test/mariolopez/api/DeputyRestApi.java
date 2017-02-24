@@ -1,6 +1,5 @@
 package com.deputy.test.mariolopez.api;
 
-import com.deputy.test.mariolopez.beans.BusinessInfo;
 import com.deputy.test.mariolopez.beans.Shift;
 import com.deputy.test.mariolopez.beans.ShiftInfo;
 
@@ -11,16 +10,12 @@ import retrofit2.http.GET;
 import retrofit2.http.POST;
 import rx.Completable;
 import rx.Observable;
-import rx.Single;
 
 /**
  * Created by mario on 23/02/2017.
  */
 
 public interface DeputyRestApi {
-
-    @GET("business/")
-    Single<BusinessInfo> businessInfo();
 
     @GET("shifts")
     Observable<List<Shift>> getShifts();

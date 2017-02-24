@@ -2,4 +2,5 @@
     <string name="app_name">mariolopez</string>
     <string name="start">start</string>
     <string name="end">end</string>
+    <string name="api_map_key">AIzaSyALtMQ1Mlc9Xb_j80eguakbnFtQbYPML_Y</string>
 </resources>
